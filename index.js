@@ -1,9 +1,12 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const app = express()
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cors())
 const port = 3002
 
 // MongoDB connection
@@ -35,7 +38,8 @@ app.post('/user', async (req, res) => {
         fname: req.body.fname,
         lname: req.body.lname,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        role: 2
     })
 
     try {
@@ -45,6 +49,11 @@ app.post('/user', async (req, res) => {
         res.status(400).json({message: error.message})
     }
 })
+
+app.post('/test', (req, res) => {
+    console.log(req.body)
+    res.send('Hello world')
+});
 
 app.listen(port, () => {
     console.log(`Simple blog listening on port ${ port }`);
