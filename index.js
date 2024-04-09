@@ -1,16 +1,25 @@
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
+const authRoute = require('./Routes/AuthRoute')
+const { MONGO_URL, PORT } = process.env
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true
+}
 
 const app = express()
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors())
-const port = 3002
+app.use(cors(corsOptions))
+app.use(cookieParser())
+app.use(express.json())
+// app.use(bodyParser.urlencoded({ extended: true }))
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/blog', {
+mongoose.connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -19,42 +28,13 @@ const db = mongoose.connection
 db.on('error', error => console.log(error))
 db.once('open', () => console.log('Connected to database'))
 
-// User schema
-const userSchema = new mongoose.Schema({
-    fname: String,
-    lname: String,
-    email: String,
-    password: String
-})
-const User = mongoose.model('User', userSchema)
-
-app.get('/', (req, res) => {
-    res.send('Hello world')
-})
-
-app.post('/user', async (req, res) => {
-    console.log(req.body);
-    const user = new User({
-        fname: req.body.fname,
-        lname: req.body.lname,
-        email: req.body.email,
-        password: req.body.password,
-        role: 2
-    })
-
-    try {
-        const newUser = await user.save()
-        res.status(201).json(newUser)
-    } catch (error) {
-        res.status(400).json({message: error.message})
-    }
-})
+app.use('/', authRoute)
 
 app.post('/test', (req, res) => {
     console.log(req.body)
     res.send('Hello world')
 });
 
-app.listen(port, () => {
-    console.log(`Simple blog listening on port ${ port }`);
+app.listen(PORT, () => {
+    console.log(`Simple blog listening on port ${ PORT }`);
 })
