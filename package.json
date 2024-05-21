@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-    "dev": "nodemon index.js"
+    "start": "node --watch index.js",
+    "dev": "supervisor index.js"
   },
   "author": "Avijit Palit",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "express": "^4.18.3",
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.2.3"
+    "mongoose": "^8.2.3",
+    "supervisor": "^0.12.0"
   }
 }

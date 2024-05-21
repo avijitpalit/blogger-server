@@ -26,6 +26,7 @@ module.exports.Signin = async (req, res, next) => {
             withCredentials: true,
             httpOnly: false
         })
+        // console.log(token)
         res.status(201).json({ done: true, msg: 'Signed in successfully' })
         next()
     } catch (error) {

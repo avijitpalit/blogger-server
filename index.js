@@ -42,6 +42,6 @@ app.listen(3002, () => {
 main().catch(err => console.log(err))
 
 async function main() {
-    console.log('inside main function')
+    console.log('inside main function ')
     // await mongoose.connect(MONGO_URL)
 }
