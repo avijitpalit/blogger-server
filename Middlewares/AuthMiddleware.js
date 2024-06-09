@@ -2,15 +2,18 @@ const User = require('../Models/UserModel')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
-module.exports.userVerification = (req, res) => {
-    const token = req.cookies.token
-    if(!token) return res.json({ status: false })
+const authenticateJWT = (req, res, next) => {
+    const token = req.header('Authorization')
+    // console.log(token);
+    if(!token) return res.sendStatus(401);
     jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
-        if(err) res.json({ status: false })
+        if(err) res.sendStatus(403);
         else {
             const user = await User.findById(data.id)
-            if(user) return res.json({ status: true, email: user.email, password: user.password })
-            else res.json({ status: false })
+            if(user) req.user = user
+            next()
         }
     })
 }
+
+module.exports = authenticateJWT

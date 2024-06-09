@@ -6,7 +6,11 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const authRoute = require('./Routes/AuthRoute')
 const userRoute = require('./Routes/UserRoute')
-const { MONGO_URL, PORT } = process.env
+const Car = require('./Models/UserModel');
+const { MONGO_URL, PORT } = process.env;
+const authenticateJWT = require('./Middlewares/AuthMiddleware');
+const jwt = require('jsonwebtoken');
+const postRoute = require('./Routes/PostRoute')
 
 const corsOptions = {
     origin: 'http://localhost:3000',
@@ -29,19 +33,28 @@ db.once('open', () => console.log('Connected to database'))
 // Routes
 app.use('/', authRoute)
 app.use('/user', userRoute)
+app.use('/post', postRoute)
 
 app.post('/test', (req, res) => {
     console.log(req.body)
     res.send('Hello world changed')
 });
 
+app.get('/test', authenticateJWT, (req, res) => {
+    console.log('something');
+    res.send('something');
+});
+
+app.get('/add-car', async (req, res) => {
+    console.log('lfdsff');
+    const car = await Car.create({ name: 'Minibus', type: 'bus' });
+    //console.log(car);
+    // if(car._id) res.status(201).json({
+    //     msg: 'User created successfully'
+    // })
+    res.status(400).json({msg: 'Error'});
+});
+
 app.listen(3002, () => {
-    console.log(`Simple blog listening on port ${ 3002 }`);
+    console.log(`Simple blog listening on port ${ process.env.PORT }`);
 })
-
-main().catch(err => console.log(err))
-
-async function main() {
-    console.log('inside main function ')
-    // await mongoose.connect(MONGO_URL)
-}
