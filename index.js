@@ -35,7 +35,7 @@ app.use('/', authRoute)
 app.use('/user', userRoute)
 app.use('/post', postRoute)
 
-app.post('/test', (req, res) => {
+/* app.post('/test', (req, res) => {
     console.log(req.body)
     res.send('Hello world changed')
 });
@@ -43,17 +43,7 @@ app.post('/test', (req, res) => {
 app.get('/test', authenticateJWT, (req, res) => {
     console.log('something');
     res.send('something');
-});
-
-app.get('/add-car', async (req, res) => {
-    console.log('lfdsff');
-    const car = await Car.create({ name: 'Minibus', type: 'bus' });
-    //console.log(car);
-    // if(car._id) res.status(201).json({
-    //     msg: 'User created successfully'
-    // })
-    res.status(400).json({msg: 'Error'});
-});
+}); */
 
 app.listen(3002, () => {
     console.log(`Simple blog listening on port ${ process.env.PORT }`);

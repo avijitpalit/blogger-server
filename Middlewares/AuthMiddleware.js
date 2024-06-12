@@ -7,7 +7,7 @@ const authenticateJWT = (req, res, next) => {
     // console.log(token);
     if(!token) return res.sendStatus(401);
     jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
-        if(err) res.sendStatus(403);
+        if(err) res.json({ done: false, error: 'Authentication failed' });
         else {
             const user = await User.findById(data.id)
             if(user) req.user = user
